@@ -145,18 +145,21 @@ The following Drei components have been tested with R3F + WebGPU:
 
 - ✅ BakeShadows
 - ✅ Billboard
+- ✅ Bvh
 - ✅ FlyControls
 - ✅ GradientTexture
 - ✅ Html
 - ✅ Instances
 - ✅ KeyboardControls
 - ✅ MapControls
+- ✅ Merged
 - ✅ OrbitControls
 - ✅ OrthographicCamera
 - ✅ Stats
 - ✅ StatsGl
 
 - ❌ Edges: `TypeError: Failed to execute 'drawIndexed' on 'GPURenderPassEncoder': Value is infinite and not of type 'unsigned long'.`
+- ❌ MeshTransmissionMaterial
 - ❌ Outlines: `NodeMaterial: Material "ShaderMaterial" is not compatible.`
 - ❌ Text: `TypeError: Failed to execute 'drawIndexed' on 'GPURenderPassEncoder': Value is infinite and not of type 'unsigned long'.`
 - ❌ Wireframe: Nothing shows up + `Requires non-indexed geometry, converting to non-indexed geometry.`
