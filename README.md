@@ -58,6 +58,10 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ React Three Fiber with WebGPURenderer always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
 
+- ⚠️ Using React Three Fiber with React 19 RC requires installing with `npm i --legacy-peer-deps`.
+
+- ⚠️ Using R3F v9 requires a [fix when initializing the canvas](#react-three-fiber-v9-xr-issue).
+
 ### Next.js 14, Pages Router, R3F 8, React 18
 
 Dev & Prod: ✅ ⚠️
@@ -96,27 +100,9 @@ Next.js 15 should be used with React 19 RC, but there are incompatible dependenc
 
 ### Next.js 15, Pages Router, R3F, React 19 RC
 
-With `npm i --legacy-peer-deps`:
-
 ❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
 
 ### Next.js 15, Pages Router, R3F v9, React 19 RC
-
-With `npm i --legacy-peer-deps`:
-
-`TypeError: gl.xr.addEventListener is not a function`
-
-Can be fixed with:
-
-```jsx
-<Canvas
-  gl={canvas => {
-    const renderer = new WebGPURenderer({ canvas })
-    renderer.xr = { addEventListener: () => {} }
-    return renderer
-  }}
->
-```
 
 Dev & Prod: ✅ ⚠️
 
@@ -124,8 +110,6 @@ Dev & Prod: ✅ ⚠️
 > .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ### Next.js 15, App Router, R3F v9, React 19 RC
-
-Use the same `xr` fix as above.
 
 Dev & Prod: ✅ ⚠️
 
@@ -231,6 +215,24 @@ function MyComponent() {
 This warning is caused by using R3F with WebGPURenderer.
 
 THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
+
+### React Three Fiber v9 XR issue
+
+If you use R3F v9, you will get this error on your Canvas:
+
+❌ `TypeError: gl.xr.addEventListener is not a function`
+
+It can be fixed with:
+
+```jsx
+<Canvas
+  gl={canvas => {
+    const renderer = new WebGPURenderer({ canvas })
+    renderer.xr = { addEventListener: () => {} }
+    return renderer
+  }}
+>
+```
 
 ## Drei Compatibility
 
