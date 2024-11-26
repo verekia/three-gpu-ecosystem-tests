@@ -6,22 +6,6 @@ Testing goes from Vite vanilla JS all the way to TS + React + React Three Fiber 
 
 This is the behavior expected for the upcoming Three.js r171 release.
 
-## TLDR
-
-- ✅ **Vite + vanilla Three.js**: Works in all cases.
-- ✅ **Next.js + vanilla Three.js**: Works in all cases.
-- ✅ **Vite + R3F**: Works.
-- ✅ **Next.js 14 + R3F**: Works in both Pages and App routers.
-- ❌ **Next.js 15 + R3F**: Does not work, except with Pages Router + React 18.
-- ✅ **Next.js 15 + R3F v9**: Works with a minor workaround, in both Pages and App routers.
-- ✅ **Next.js 15 + R3F v9 + RSC**: Works, but good luck with that.
-
-✅ ⚠️ All **R3F** cases work but cause the warning `THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.`.
-
-Some modules`three/webgpu`
-
-You should also expect to only be able to use a subset of [Drei](https://github.com/pmndrs/drei) and the Three.js ecosystem with WebGPU, since some libraries and composants are written in GLSL. See the [Drei Compatibility](#drei-compatibility) section for the list of compatible components.
-
 ## How to test
 
 Go to a folder, like `next15-pages-vanilla-react19`.
@@ -36,18 +20,15 @@ Otherwise, to test with your local Node.js version:
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
-## a0a25ea (2024-11-26)
-
-**a0a25ea** is [this commit](https://github.com/mrdoob/three.js/commit/a0a25ea032029951ba50622be4277af87170feaa).
-
-It is the current `dev` branch as of 2024-11-26, before the release of Three.js r171.
-
 ## Results
+
+Tested with the `dev` branch at commit [**a0a25ea**](https://github.com/mrdoob/three.js/commit/a0a25ea032029951ba50622be4277af87170feaa) (2024-11-26, before the release of r171).
 
 A ✅ means the scene renders, and the project works in dev mode, and in production.
 
 - `next14-app-r3f8-react18`: ✅
 - `next14-pages-r3f8-react18`: ✅
+- `next15-app-r3f8-react18`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 - `next15-app-r3f9-react19`: ✅
 - `next15-app-r3f9-react19-rsc`: ✅ - see [this note](#react-server-components-with-r3f) about RSCs
 - `next15-app-vanilla-react19`: ✅
@@ -66,18 +47,6 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ Using R3F v9 requires a [fix when initializing the canvas](#react-three-fiber-v9-xr-issue).
 
-### Next.js 14, Pages Router, R3F 8, React 18
-
-Dev & Prod: ✅ ⚠️
-
-> THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-### Next.js 14, App Router (use client), R3F, React 18
-
-Dev & Prod: ✅ ⚠️
-
-> THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
-
 ### Next.js 15, Pages Router, vanilla Three.js, React 19 RC
 
 Dev & Prod: ✅
@@ -95,12 +64,6 @@ Dev & Prod: ⚠️
 > [HMR] Invalid message: {"action":"appIsrManifest","data":{}} - TypeError: Cannot read properties of undefined (reading 'pathname')
 
 > THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-### Next.js 15, App Router (use client), R3F, React 18
-
-Next.js 15 should be used with React 19 RC, but there are incompatible dependencies with R3F. Forcing react@18.3.1 in this case. Next.js issues are expected.
-
-❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
 
 ### Next.js 15, Pages Router, R3F, React 19 RC
 
@@ -234,7 +197,21 @@ It can be fixed with:
 >
 ```
 
+### ReactCurrentOwner issue
+
+In the browser, there is this error:
+
+❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
+
+Also a related error during builds:
+
+❌ Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')
+
+It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 RC in some circumstances.
+
 ## Drei Compatibility
+
+You should also expect to only be able to use a subset of [Drei](https://github.com/pmndrs/drei) and the Three.js ecosystem with WebGPU, since some libraries and composants are written in GLSL.
 
 The following Drei components have been tested with R3F + WebGPU:
 
