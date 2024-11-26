@@ -32,7 +32,7 @@ If you have Docker installed:
 
 Otherwise, to test with your local Node.js version:
 
-1. `npm i`.
+1. `npm i`. (you might need `--legacy-peer-deps` with React 19 RC, check the Dockerfile)
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
@@ -46,15 +46,34 @@ It is the current `dev` branch as of 2024-11-26, before the release of Three.js 
 
 Dev & Prod: ✅
 
+If you import modules with top-level await like `three/examples/jsm/capabilities/WebGPU`, you will get an error:
+
+❌ `Top-level await is not available in the configured target environment`
+
+Add this to your `vite.config.js`:
+
+```js
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  optimizeDeps: { esbuildOptions: { target: 'esnext' } },
+  build: { target: 'esnext' },
+})
+```
+
 ### Vite, React, TS, SWC
 
 Dev & Prod: ✅
+
+See the instructions above for the top-level await error.
 
 ### Vite, React, JS, SWC, R3F
 
 Dev & Prod: ✅ ⚠️
 
 > THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
+
+See the instructions above for the top-level await error.
 
 ### Next.js 14, Pages Router, R3F, React 18
 

@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "vite build && vite preview"
+    "start": "vite build && vite preview --host",
+    "docker": "docker build -t vite-vanilla-js . && docker run -p 4173:4173 vite-vanilla-js"
   },
   "dependencies": {
-    "three": "file:../three-a0a25ea.tgz"
+    "three": "file:./three-a0a25ea.tgz"
   },
   "devDependencies": {
     "vite": "5.4.10"
