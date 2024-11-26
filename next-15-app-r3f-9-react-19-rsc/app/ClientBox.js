@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import * as TSL from 'three/tsl'
 
 export function ClientBox(props) {
   const meshRef = useRef()
@@ -13,7 +12,6 @@ export function ClientBox(props) {
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
   console.log(gl)
-  console.log(TSL.sqrt(2))
 
   return (
     <mesh

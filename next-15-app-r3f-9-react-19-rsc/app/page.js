@@ -1,8 +1,13 @@
 import React from 'react'
+import * as TSL from 'three/tsl'
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 
 import { ClientBox } from './ClientBox'
 import { ClientCanvas } from './ClientCanvas'
 import { ClientOrbitControls } from './ClientOrbitControls'
+
+console.log(WebGPU.isAvailable())
+console.log(TSL.sqrt(2))
 
 export default function IndexPage() {
   return (

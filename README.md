@@ -16,55 +16,71 @@ This is the behavior expected for the upcoming Three.js r171 release.
 - ✅ **Next.js 15 + R3F v9**: Works with a minor workaround, in both Pages and App routers.
 - ✅ **Next.js 15 + R3F v9 + RSC**: Works, but good luck with that.
 
-✅ ⚠️ All **R3F** cases work but cause the warning ⚠️ `THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.`.
+✅ ⚠️ All **R3F** cases work but cause the warning `THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.`.
+
+Some modules`three/webgpu`
 
 You should also expect to only be able to use a subset of [Drei](https://github.com/pmndrs/drei) and the Three.js ecosystem with WebGPU, since some libraries and composants are written in GLSL. See the [Drei Compatibility](#drei-compatibility) section for the list of compatible components.
 
-## 4cc2eb5 (2024-11-25)
+## How to test
 
-**4cc2eb5** is [this commit](https://github.com/mrdoob/three.js/commit/4cc2eb5f5cde14e844266521e8b3b1daf6767ae9).
+Go to a folder, like `next15-pages-vanilla-react19`.
 
-It is the current `dev` branch as of 2024-11-25, before the release of Three.js r171.
+If you have Docker installed:
+
+- `npm run docker` to build and run the app in production mode (uses Node 20, where `navigator` is not defined).
+
+Otherwise, to test with your local Node.js version:
+
+1. `npm i`.
+2. `npm run dev` to check how it works in development.
+3. `npm run start` to check how it works in production.
+
+## a0a25ea (2024-11-26)
+
+**a0a25ea** is [this commit](https://github.com/mrdoob/three.js/commit/a0a25ea032029951ba50622be4277af87170feaa).
+
+It is the current `dev` branch as of 2024-11-26, before the release of Three.js r171.
 
 ### Vite, vanilla JS
 
-Dev: ✅ | Prod: ✅
+Dev & Prod: ✅
 
 ### Vite, React, TS, SWC
 
-Dev: ✅ | Prod: ✅
+Dev & Prod: ✅
 
 ### Vite, React, JS, SWC, R3F
 
-Dev: ✅ ⚠️ | Prod: ✅ ⚠️
+Dev & Prod: ✅ ⚠️
 
 > THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ### Next.js 14, Pages Router, R3F, React 18
 
-Dev: ✅ ⚠️ | Prod: ✅ ⚠️
+Dev & Prod: ✅ ⚠️
 
 > THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ### Next.js 14, App Router (use client), R3F, React 18
 
-Dev: ✅ ⚠️ | Prod: ✅ ⚠️
+Dev & Prod: ✅ ⚠️
 
 > THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ### Next.js 15, Pages Router, vanilla Three.js, React 19 RC
 
-Dev: ✅ | Prod: ✅
+Dev & Prod: ✅
 
 ### Next.js 15, App Router (use client), vanilla Three.js, React 19 RC
 
-Dev: ✅ | Prod: ✅
+Dev & Prod: ✅
 
 ### Next.js 15, Pages Router, R3F, React 18
 
 Next.js 15 should be used with React 19 RC, but there are incompatible dependencies with R3F. Forcing react@18.3.1 in this case. Next.js issues are expected.
 
-Dev: ⚠️ | Prod: ⚠️
+Dev & Prod: ⚠️
 
 > [HMR] Invalid message: {"action":"appIsrManifest","data":{}} - TypeError: Cannot read properties of undefined (reading 'pathname')
 
@@ -100,24 +116,24 @@ Can be fixed with:
 >
 ```
 
-Dev: ✅ ⚠️ | Prod: ✅ ⚠️
+Dev & Prod: ✅ ⚠️
 
-> ⚠️ [HMR] Invalid message: {"action":"appIsrManifest","data":{}}
-> ⚠️ .render() called before the backend is initialized. Try using .renderAsync() instead.
+> [HMR] Invalid message: {"action":"appIsrManifest","data":{}}
+> .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ### Next.js 15, App Router, R3F v9, React 19 RC
 
 Use the same `xr` fix as above.
 
-Dev: ✅ ⚠️ | Prod: ✅ ⚠️
+Dev & Prod: ✅ ⚠️
 
-> ⚠️ .render() called before the backend is initialized. Try using .renderAsync() instead.
+> .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ### Next.js 15, App Router, R3F v9, React 19 RC, RSC
 
-Dev: ✅ ⚠️ | Prod: ✅ ⚠️
+Dev & Prod: ✅ ⚠️
 
-> ⚠️ .render() called before the backend is initialized. Try using .renderAsync() instead.
+> .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 You can use React Server Components with R3F. This actually works without `'use client'`:
 
@@ -138,6 +154,52 @@ You can use React Server Components with R3F. This actually works without `'use 
 ```
 
 `ClientCanvas`, `ClientBox`, and `ClientOrbitControls` are marked with `'use client'`. You can interweave server and client components this way, but expect this approach to be pretty painful.
+
+## SSR with Next.js and Node.js
+
+Next.js uses Node.js to Server-Side Render pages on the server. When importing modules on the server, if those modules reference global browser objects like `window`, `document`, or `navigator` at the top level, you will get a compilation error. _Except_ for `navigator`, which got [added to Node.js 21](https://nodejs.org/en/blog/announcements/v21-release-announce#navigator-object-integration).
+
+Those top-level references are being tracked down in Three.js for better Next.js support, and this repository is also meant to help testing this.
+
+Generally speaking, as a Next.js developer working with libraries that are meant for browsers like Three.js, it is safer to execute browser-only code inside `useEffect` hooks or similar. See [this article](https://www.joshwcomeau.com/react/the-perils-of-rehydration/).
+
+```js
+import { browserOnlyFunction } from 'three'
+
+browserOnlyFunction() // ❌ Don't do that, it runs on the server during SSR
+
+function MyComponent() {
+  browserOnlyFunction() // ❌ Don't do that, it runs on the server during SSR
+
+  useEffect(() => {
+    browserOnlyFunction() // ✅ No problem, runs only in the browser
+  }, [])
+
+  return // ...
+}
+```
+
+## Top-level Await with Next.js
+
+Some Three.js modules, like `three/examples/jsm/capabilities/WebGPU`, contain top-level await statements. This causes the following warning when compiling:
+
+```
+  ▲ Next.js 14.2.18
+
+ ✓ Linting and checking validity of types
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./node_modules/three/examples/jsm/capabilities/WebGPU.js
+The generated code contains 'async/await' because this module is using "topLevelAwait".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.
+
+Import trace for requested module:
+./node_modules/three/examples/jsm/capabilities/WebGPU.js
+
+ ✓ Compiled successfully
+```
 
 ## Drei Compatibility
 

@@ -1,6 +1,10 @@
 import * as THREE from 'three'
 import { WebGPURenderer } from 'three/webgpu'
 import * as TSL from 'three/tsl'
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
+
+console.log(WebGPU.isAvailable())
+console.log(TSL.sqrt(2))
 
 const width = window.innerWidth,
   height = window.innerHeight
@@ -27,5 +31,3 @@ function animate(time) {
 
   renderer.render(scene, camera)
 }
-
-console.log(TSL.sqrt(2))

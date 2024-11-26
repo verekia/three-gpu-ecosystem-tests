@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "start": "next build && next start",
+    "docker": "docker build -t next15-app-vanilla-react19 . && docker run -p 3000:3000 next15-app-vanilla-react19"
+  },
+  "dependencies": {
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "next": "15.0.3",
+    "three": "file:./three-a0a25ea.tgz"
+  }
+}

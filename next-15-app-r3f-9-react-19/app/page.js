@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { WebGPURenderer } from 'three/webgpu'
 import * as TSL from 'three/tsl'
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 
 function Box(props) {
   const meshRef = useRef()
@@ -14,8 +15,12 @@ function Box(props) {
 
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
+  useEffect(() => {
+    console.log(WebGPU.isAvailable())
+    console.log(TSL.sqrt(2))
+  }, [])
+
   console.log(gl)
-  console.log(TSL.sqrt(2))
 
   return (
     <mesh

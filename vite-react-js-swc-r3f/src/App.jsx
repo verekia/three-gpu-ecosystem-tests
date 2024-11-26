@@ -3,6 +3,10 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Billboard, OrbitControls, Text } from '@react-three/drei'
 import { WebGPURenderer } from 'three/webgpu'
 import * as TSL from 'three/tsl'
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
+
+console.log(WebGPU.isAvailable())
+console.log(TSL.sqrt(2))
 
 function Box(props) {
   const meshRef = useRef()
@@ -13,7 +17,6 @@ function Box(props) {
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
   console.log(gl)
-  console.log(TSL.sqrt(2))
 
   return (
     <mesh
