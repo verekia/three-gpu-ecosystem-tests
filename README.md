@@ -46,13 +46,17 @@ It is the current `dev` branch as of 2024-11-26, before the release of Three.js 
 
 A ✅ means the scene renders, and the project works in dev mode, and in production.
 
+- `next14-app-r3f8-react18`: ✅
+- `next14-pages-r3f8-react18`: ✅
+- `next15-app-r3f9-react19`: ✅
+- `next15-app-r3f9-react19-rsc`: ✅ - see [this note](#react-server-components-with-r3f) about RSCs
 - `next15-app-vanilla-react19`: ✅
 - `next15-pages-vanilla-react19`: ✅
 - `vite-ts-swc-r3f8-react18`: ✅
 - `vite-ts-swc-r3f9-react19`: ✅
 - `vite-vanilla-js`: ✅
 
-### Issues
+### Non-blocking issues
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
@@ -115,11 +119,7 @@ Dev & Prod: ✅ ⚠️
 
 > .render() called before the backend is initialized. Try using .renderAsync() instead.
 
-### Next.js 15, App Router, R3F v9, React 19 RC, RSC
-
-Dev & Prod: ✅ ⚠️
-
-> .render() called before the backend is initialized. Try using .renderAsync() instead.
+### React Server Components with R3F
 
 You can use React Server Components with R3F. This actually works without `'use client'`:
 
