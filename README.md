@@ -12,11 +12,13 @@ Go to a folder, like `next15-pages-vanilla-react19`.
 
 If you have Docker installed:
 
-- `npm run docker` to build and run the app in production mode (uses Node 20, where `navigator` is not defined).
+- `npm run docker` to build and run the app in production mode.
+
+> The Docker image uses Node 20, before `navigator` was added in Node 21.
 
 Otherwise, to test with your local Node.js version:
 
-1. `npm i`. (you might need `--legacy-peer-deps` with React 19 RC, check the Dockerfile)
+1. `npm i` (you need `--legacy-peer-deps` with React 19 RC)
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
@@ -30,8 +32,11 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 - `next14-pages-r3f8-react18`: ✅
 - `next15-app-r3f8-react18`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 - `next15-app-r3f9-react19`: ✅
-- `next15-app-r3f9-react19-rsc`: ✅ - see [this note](#react-server-components-with-r3f) about RSCs
+- `next15-app-r3f9-react19-rsc`: ✅ See [this note](#react-server-components-with-r3f) about RSCs
 - `next15-app-vanilla-react19`: ✅
+- `next15-pages-r3f8-react18`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
+- `next15-pages-r3f8-react19`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
+- `next15-pages-r3f9-react19`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
 - `next15-pages-vanilla-react19`: ✅
 - `vite-ts-swc-r3f8-react18`: ✅
 - `vite-ts-swc-r3f9-react19`: ✅
@@ -41,68 +46,11 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
-- ⚠️ React Three Fiber with WebGPURenderer always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
+- ⚠️ React Three Fiber with `WebGPURenderer` always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
 
 - ⚠️ Using React Three Fiber with React 19 RC requires installing with `npm i --legacy-peer-deps`.
 
 - ⚠️ Using R3F v9 requires a [fix when initializing the canvas](#react-three-fiber-v9-xr-issue).
-
-### Next.js 15, Pages Router, vanilla Three.js, React 19 RC
-
-Dev & Prod: ✅
-
-### Next.js 15, App Router (use client), vanilla Three.js, React 19 RC
-
-Dev & Prod: ✅
-
-### Next.js 15, Pages Router, R3F, React 18
-
-Next.js 15 should be used with React 19 RC, but there are incompatible dependencies with R3F. Forcing react@18.3.1 in this case. Next.js issues are expected.
-
-Dev & Prod: ⚠️
-
-> [HMR] Invalid message: {"action":"appIsrManifest","data":{}} - TypeError: Cannot read properties of undefined (reading 'pathname')
-
-> THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-### Next.js 15, Pages Router, R3F, React 19 RC
-
-❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
-
-### Next.js 15, Pages Router, R3F v9, React 19 RC
-
-Dev & Prod: ✅ ⚠️
-
-> [HMR] Invalid message: {"action":"appIsrManifest","data":{}}
-> .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-### Next.js 15, App Router, R3F v9, React 19 RC
-
-Dev & Prod: ✅ ⚠️
-
-> .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-### React Server Components with R3F
-
-You can use React Server Components with R3F. This actually works without `'use client'`:
-
-```js
-<ClientCanvas>
-  <ClientOrbitControls />
-  <ClientBox position={[-1.2, 0, 0]} />
-  <ClientBox position={[1.2, 0, 0]} />
-
-  <ambientLight intensity={Math.PI / 2} />
-  <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-  <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-  <mesh>
-    <boxGeometry />
-    <meshStandardMaterial color="red" />
-  </mesh>
-</ClientCanvas>
-```
-
-`ClientCanvas`, `ClientBox`, and `ClientOrbitControls` are marked with `'use client'`. You can interweave server and client components this way, but expect this approach to be pretty painful.
 
 ## Top-level Await issues
 
@@ -112,7 +60,7 @@ Some Three.js modules, like `three/examples/jsm/capabilities/WebGPU`, contain to
 
 Importing a module with top-level await will give you this error:
 
-❌ `Top-level await is not available in the configured target environment`
+> ❌ `Top-level await is not available in the configured target environment`
 
 Add this to your `vite.config.js`:
 
@@ -132,21 +80,34 @@ One of the options fixes development mode, the other fixes production.
 Importing a module with top-level await will give you this warning in the browser console and when compiling:
 
 ```
-  ▲ Next.js 14.2.18
-
- ✓ Linting and checking validity of types
-   Creating an optimized production build ...
- ⚠ Compiled with warnings
-
 ./node_modules/three/examples/jsm/capabilities/WebGPU.js
 The generated code contains 'async/await' because this module is using "topLevelAwait".
 However, your target environment does not appear to support 'async/await'.
 As a result, the code may not run as expected or may cause runtime errors.
+```
 
-Import trace for requested module:
-./node_modules/three/examples/jsm/capabilities/WebGPU.js
+### R3F render called before backend initialized issue
 
- ✓ Compiled successfully
+This warning is caused by using R3F with WebGPURenderer.
+
+> ⚠️ `THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.`
+
+### React Three Fiber v9 XR issue
+
+If you use R3F v9, you will get this error on your Canvas:
+
+> ❌ `TypeError: gl.xr.addEventListener is not a function`
+
+It can be fixed with:
+
+```jsx
+<Canvas
+  gl={canvas => {
+    const renderer = new WebGPURenderer({ canvas })
+    renderer.xr = { addEventListener: () => {} }
+    return renderer
+  }}
+>
 ```
 
 ## SSR issues with Next.js and Node.js
@@ -173,41 +134,47 @@ function MyComponent() {
 }
 ```
 
-### R3F render called before backend initialized issue
-
-This warning is caused by using R3F with WebGPURenderer.
-
-THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-### React Three Fiber v9 XR issue
-
-If you use R3F v9, you will get this error on your Canvas:
-
-❌ `TypeError: gl.xr.addEventListener is not a function`
-
-It can be fixed with:
-
-```jsx
-<Canvas
-  gl={canvas => {
-    const renderer = new WebGPURenderer({ canvas })
-    renderer.xr = { addEventListener: () => {} }
-    return renderer
-  }}
->
-```
-
 ### ReactCurrentOwner issue
 
 In the browser, there is this error:
 
-❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
+> ❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
 
 Also a related error during builds:
 
-❌ Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')
+> ❌ Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')
 
 It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 RC in some circumstances.
+
+### React Server Components with R3F
+
+You can use React Server Components with R3F. This actually works without `'use client'`:
+
+```js
+<ClientCanvas>
+  <ClientOrbitControls />
+  <ClientBox position={[-1.2, 0, 0]} />
+  <ClientBox position={[1.2, 0, 0]} />
+
+  <ambientLight intensity={Math.PI / 2} />
+  <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+  <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+  <mesh>
+    <boxGeometry />
+    <meshStandardMaterial color="red" />
+  </mesh>
+</ClientCanvas>
+```
+
+`ClientCanvas`, `ClientBox`, and `ClientOrbitControls` are marked with `'use client'`. You can interweave server and client components this way, but expect this approach to be pretty painful.
+
+### HMR appIsrManifest issue
+
+> ⚠️ `[HMR] Invalid message: {"action":"appIsrManifest","data":{}}`
+
+> `TypeError: Cannot read properties of undefined (reading 'pathname')`
+
+[Issue on Next.js repo](https://github.com/vercel/next.js/issues/71974).
 
 ## Drei Compatibility
 
