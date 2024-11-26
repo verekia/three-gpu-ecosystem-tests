@@ -1,8 +1,8 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js development versions that are between r170 and r171. All tests use **WebGPURenderer** and call a **TSL** function.
+This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js development versions that are between r170 and r171. All tests use **WebGPURenderer**, a call a **TSL** function, and a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`.
 
-Testing goes from Vite vanilla JS all the way to TS + React + React Three Fiber + Next.js (Pages and App routers).
+Testing goes from Vite vanilla JS all the way to TS + React + React Three Fiber + Next.js (Pages and App routers) + RSCs.
 
 This is the behavior expected for the upcoming Three.js r171 release.
 
@@ -136,15 +136,13 @@ function MyComponent() {
 
 ### ReactCurrentOwner issue
 
-In the browser, there is this error:
+It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 RC in some circumstances.
 
 > ❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
 
 Also a related error during builds:
 
 > ❌ Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')
-
-It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 RC in some circumstances.
 
 ### React Server Components with R3F
 
