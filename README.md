@@ -42,40 +42,23 @@ Otherwise, to test with your local Node.js version:
 
 It is the current `dev` branch as of 2024-11-26, before the release of Three.js r171.
 
-### Vite, vanilla JS
+## Results
 
-Dev & Prod: ✅
+A ✅ means the scene renders, and the project works in dev mode, and in production.
 
-If you import modules with top-level await like `three/examples/jsm/capabilities/WebGPU`, you will get an error:
+- `next15-app-vanilla-react19`: ✅
+- `next15-pages-vanilla-react19`: ✅
+- `vite-ts-swc-r3f8-react18`: ✅
+- `vite-ts-swc-r3f9-react19`: ✅
+- `vite-vanilla-js`: ✅
 
-❌ `Top-level await is not available in the configured target environment`
+### Issues
 
-Add this to your `vite.config.js`:
+- ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
-```js
-import { defineConfig } from 'vite'
+- ⚠️ React Three Fiber with WebGPURenderer always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
 
-export default defineConfig({
-  optimizeDeps: { esbuildOptions: { target: 'esnext' } },
-  build: { target: 'esnext' },
-})
-```
-
-### Vite, React, TS, SWC
-
-Dev & Prod: ✅
-
-See the instructions above for the top-level await error.
-
-### Vite, React, JS, SWC, R3F
-
-Dev & Prod: ✅ ⚠️
-
-> THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
-
-See the instructions above for the top-level await error.
-
-### Next.js 14, Pages Router, R3F, React 18
+### Next.js 14, Pages Router, R3F 8, React 18
 
 Dev & Prod: ✅ ⚠️
 
@@ -174,11 +157,56 @@ You can use React Server Components with R3F. This actually works without `'use 
 
 `ClientCanvas`, `ClientBox`, and `ClientOrbitControls` are marked with `'use client'`. You can interweave server and client components this way, but expect this approach to be pretty painful.
 
-## SSR with Next.js and Node.js
+## Top-level Await issues
 
-Next.js uses Node.js to Server-Side Render pages on the server. When importing modules on the server, if those modules reference global browser objects like `window`, `document`, or `navigator` at the top level, you will get a compilation error. _Except_ for `navigator`, which got [added to Node.js 21](https://nodejs.org/en/blog/announcements/v21-release-announce#navigator-object-integration).
+Some Three.js modules, like `three/examples/jsm/capabilities/WebGPU`, contain top-level await statements.
 
-Those top-level references are being tracked down in Three.js for better Next.js support, and this repository is also meant to help testing this.
+### Vite
+
+Importing a module with top-level await will give you this error:
+
+❌ `Top-level await is not available in the configured target environment`
+
+Add this to your `vite.config.js`:
+
+```js
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  optimizeDeps: { esbuildOptions: { target: 'esnext' } },
+  build: { target: 'esnext' },
+})
+```
+
+One of the options fixes development mode, the other fixes production.
+
+### Next.js
+
+Importing a module with top-level await will give you this warning in the browser console and when compiling:
+
+```
+  ▲ Next.js 14.2.18
+
+ ✓ Linting and checking validity of types
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./node_modules/three/examples/jsm/capabilities/WebGPU.js
+The generated code contains 'async/await' because this module is using "topLevelAwait".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.
+
+Import trace for requested module:
+./node_modules/three/examples/jsm/capabilities/WebGPU.js
+
+ ✓ Compiled successfully
+```
+
+## SSR issues with Next.js and Node.js
+
+Next.js uses Node.js to Server-Side Render pages on the server. When importing modules on the server, if those modules reference global browser objects like `window`, `document`, `self`, or `navigator` at the top level, you will get a compilation error. _Except_ for `navigator`, which got [added to Node.js 21](https://nodejs.org/en/blog/announcements/v21-release-announce#navigator-object-integration).
+
+Those top-level references are being tracked down in Three.js for better Next.js support, and this repository is also meant to help testing those issues.
 
 Generally speaking, as a Next.js developer working with libraries that are meant for browsers like Three.js, it is safer to execute browser-only code inside `useEffect` hooks or similar. See [this article](https://www.joshwcomeau.com/react/the-perils-of-rehydration/).
 
@@ -198,27 +226,11 @@ function MyComponent() {
 }
 ```
 
-## Top-level Await with Next.js
+### R3F render called before backend initialized issue
 
-Some Three.js modules, like `three/examples/jsm/capabilities/WebGPU`, contain top-level await statements. This causes the following warning when compiling:
+This warning is caused by using R3F with WebGPURenderer.
 
-```
-  ▲ Next.js 14.2.18
-
- ✓ Linting and checking validity of types
-   Creating an optimized production build ...
- ⚠ Compiled with warnings
-
-./node_modules/three/examples/jsm/capabilities/WebGPU.js
-The generated code contains 'async/await' because this module is using "topLevelAwait".
-However, your target environment does not appear to support 'async/await'.
-As a result, the code may not run as expected or may cause runtime errors.
-
-Import trace for requested module:
-./node_modules/three/examples/jsm/capabilities/WebGPU.js
-
- ✓ Compiled successfully
-```
+THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.
 
 ## Drei Compatibility
 
