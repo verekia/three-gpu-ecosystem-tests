@@ -1,16 +1,15 @@
 {
-  "name": "vite-react-ts-swc",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "tsc -b && vite build && vite preview"
+    "start": "tsc -b && vite build && vite preview --host",
+    "docker": "docker build -t vite-react-ts-swc . && docker run -p 4173:4173 vite-react-ts-swc"
   },
   "dependencies": {
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "three": "file:../three-a0a25ea.tgz"
+    "three": "file:./three-a0a25ea.tgz"
   },
   "devDependencies": {
     "@eslint/js": "9.13.0",

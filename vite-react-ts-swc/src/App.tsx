@@ -8,9 +8,6 @@ import * as TSL from 'three/tsl'
 // @ts-ignore
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 
-console.log(WebGPU.isAvailable())
-console.log(TSL.sqrt(2))
-
 function App() {
   useEffect(() => {
     const width = window.innerWidth,
@@ -38,6 +35,9 @@ function App() {
 
       renderer.render(scene, camera)
     }
+
+    console.log(WebGPU.isAvailable())
+    console.log(TSL.sqrt(2))
   }, [])
 
   return null
