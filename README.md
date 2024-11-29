@@ -1,10 +1,8 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js development versions that are between r170 and r171. All tests use **WebGPURenderer**, a call a **TSL** function, and a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`.
+This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, and a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`.
 
 Testing goes from Vite vanilla JS all the way to TS + React + React Three Fiber + Next.js (Pages and App routers) + RSCs.
-
-This is the behavior expected for the upcoming Three.js r171 release.
 
 ## How to test
 
@@ -23,8 +21,6 @@ Otherwise, to test with your local Node.js version:
 3. `npm run start` to check how it works in production.
 
 ## Results
-
-Tested with the `dev` branch at commit [**a0a25ea**](https://github.com/mrdoob/three.js/commit/a0a25ea032029951ba50622be4277af87170feaa) (2024-11-26, before the release of r171).
 
 A ✅ means the scene renders, and the project works in dev mode, and in production.
 
