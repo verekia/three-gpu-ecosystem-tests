@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, and a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`.
+This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
 
 ## How to test
 
@@ -32,6 +32,7 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 - `next15-pages-r3f8-react19`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 - `next15-pages-r3f9-react19`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
 - `next15-pages-vanilla-react19`: ✅
+- `sveltekit-threlte8`: ✅
 - `vite-ts-swc-r3f8-react18`: ✅
 - `vite-ts-swc-r3f9-react19`: ✅
 - `vite-ts-threlte8`: ✅
