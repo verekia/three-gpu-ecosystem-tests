@@ -36,6 +36,12 @@ export default function IndexPage() {
 
     console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
+
+    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
+    setTimeout(() => {
+      // @ts-expect-error
+      console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+    }, 1000)
   }, [])
 
   return null

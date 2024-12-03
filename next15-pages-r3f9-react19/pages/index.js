@@ -13,11 +13,15 @@ function Box(props) {
 
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
-  console.log(gl)
-
   useEffect(() => {
     console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
+
+    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
+    setTimeout(() => {
+      // @ts-expect-error
+      console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+    }, 1000)
   }, [])
 
   return (

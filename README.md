@@ -2,8 +2,6 @@
 
 This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, and a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`.
 
-Testing goes from Vite vanilla JS all the way to TS + React + React Three Fiber + Next.js (Pages and App routers) + RSCs.
-
 ## How to test
 
 Go to a folder, like `next15-pages-vanilla-react19`.
@@ -36,11 +34,14 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 - `next15-pages-vanilla-react19`: ✅
 - `vite-ts-swc-r3f8-react18`: ✅
 - `vite-ts-swc-r3f9-react19`: ✅
+- `vite-ts-threlte8`: ✅
 - `vite-vanilla-js`: ✅
 
 ### Non-blocking issues
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
+
+- ⚠️ WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend, for now, [use a setTimeout](#testing-the-backend-type) to check the backend type.
 
 - ⚠️ React Three Fiber with `WebGPURenderer` always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
 
@@ -169,6 +170,16 @@ You can use React Server Components with R3F. This actually works without `'use 
 > `TypeError: Cannot read properties of undefined (reading 'pathname')`
 
 [Issue on Next.js repo](https://github.com/vercel/next.js/issues/71974).
+
+## Testing the backend type
+
+WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend ([issue](https://github.com/mrdoob/three.js/issues/30024)), for now, use a `setTimeout` to check the backend type:
+
+```js
+setTimeout(() => {
+  console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+}, 1000)
+```
 
 ## Drei Compatibility
 

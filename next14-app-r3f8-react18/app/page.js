@@ -18,9 +18,13 @@ function Box(props) {
   useEffect(() => {
     console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
-  }, [])
 
-  console.log(gl)
+    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
+    setTimeout(() => {
+      // @ts-expect-error
+      console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+    }, 1000)
+  }, [])
 
   return (
     <mesh

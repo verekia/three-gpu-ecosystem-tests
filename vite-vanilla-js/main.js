@@ -25,6 +25,11 @@ renderer.setSize(width, height)
 renderer.setAnimationLoop(animate)
 document.body.appendChild(renderer.domElement)
 
+// https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
+setTimeout(() => {
+  console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+}, 1000)
+
 function animate(time) {
   mesh.rotation.x = time / 2000
   mesh.rotation.y = time / 1000
