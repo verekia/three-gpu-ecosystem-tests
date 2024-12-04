@@ -42,7 +42,7 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
-- ⚠️ WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend, for now, [use a setTimeout](#testing-the-backend-type) to check the backend type.
+- ⚠️ WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend. You have to [await the init method](#testing-the-backend-type) before checking the backend type.
 
 - ⚠️ React Three Fiber with `WebGPURenderer` always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
 
