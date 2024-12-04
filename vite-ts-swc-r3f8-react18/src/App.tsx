@@ -18,12 +18,8 @@ function Box(props: any) {
   useEffect(() => {
     console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
-
-    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
-    setTimeout(() => {
-      // @ts-expect-error
-      console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
-    }, 1000)
+    // @ts-expect-error
+    console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
   }, [])
 
   return (
@@ -42,9 +38,19 @@ function Box(props: any) {
 }
 
 export default function App() {
+  const [frameloop, setFrameloop] = useState<'never' | 'always'>('never')
+
   return (
-    // @ts-expect-error
-    <Canvas style={{ height: '100vh' }} gl={canvas => new WebGPURenderer({ canvas })}>
+    <Canvas
+      style={{ height: '100vh' }}
+      frameloop={frameloop}
+      gl={canvas => {
+        // @ts-expect-error
+        const renderer = new WebGPURenderer({ canvas })
+        renderer.init().then(() => setFrameloop('always'))
+        return renderer
+      }}
+    >
       <OrbitControls />
       <ambientLight intensity={Math.PI / 2} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />

@@ -18,11 +18,8 @@ function Box(props: any) {
   useEffect(() => {
     console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
-    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
-    setTimeout(() => {
-      // @ts-expect-error
-      console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
-    }, 1000)
+    // @ts-expect-error
+    console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
   }, [])
 
   return (
@@ -41,12 +38,16 @@ function Box(props: any) {
 }
 
 export default function App() {
+  const [frameloop, setFrameloop] = useState<'never' | 'always'>('never')
+
   return (
     <Canvas
       style={{ height: '100vh' }}
+      frameloop={frameloop}
       gl={canvas => {
         // @ts-expect-error
         const renderer = new WebGPURenderer({ canvas })
+        renderer.init().then(() => setFrameloop('always'))
         // @ts-expect-error
         renderer.xr = { addEventListener: () => {} }
         return renderer

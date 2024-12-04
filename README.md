@@ -90,6 +90,23 @@ This warning is caused by using R3F with WebGPURenderer.
 
 > ⚠️ `THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.`
 
+There is a workaround:
+
+```jsx
+const [frameloop, setFrameloop] = useState('never')
+
+<Canvas
+  frameloop={frameloop}
+  gl={(canvas) => {
+    const renderer = new WebGPURenderer({ canvas })
+    renderer.init().then(() => setFrameloop('always'))
+    return renderer
+  }}
+/>
+```
+
+This fix is implemented in the R3F Vite examples.
+
 ### React Three Fiber v9 XR issue
 
 If you use R3F v9, you will get this error on your Canvas:
@@ -174,7 +191,34 @@ You can use React Server Components with R3F. This actually works without `'use 
 
 ## Testing the backend type
 
-WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend ([issue](https://github.com/mrdoob/three.js/issues/30024)), for now, use a `setTimeout` to check the backend type:
+WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend ([issue](https://github.com/mrdoob/three.js/issues/30024)). There are workarounds for it.
+
+With vanilla Three.js:
+
+```js
+renderer = new THREE.WebGPURenderer()
+await renderer.init()
+console.log(renderer.backend) // WebGPUBackend or WebGLBackend
+```
+
+With React Three Fiber:
+
+```js
+const [frameloop, setFrameloop] = useState('never')
+
+<Canvas
+  frameloop={frameloop}
+  gl={(canvas) => {
+    const renderer = new WebGPURenderer({ canvas })
+    renderer.init().then(() => setFrameloop('always'))
+    return renderer
+  }}
+/>
+```
+
+This fix is implemented in the R3F Vite examples.
+
+If checking the backend type is not critical (for example you just want to see which one is used when developing locally) you can use a `setTimeout` to keep things simple:
 
 ```js
 setTimeout(() => {
