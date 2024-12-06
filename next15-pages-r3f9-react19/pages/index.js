@@ -41,7 +41,12 @@ export default function IndexPage() {
       style={{ height: '100vh' }}
       frameloop={frameloop}
       gl={canvas => {
-        const renderer = new WebGPURenderer({ canvas })
+        const renderer = new WebGPURenderer({
+          canvas,
+          powerPreference: 'high-performance',
+          antialias: true,
+          alpha: true,
+        })
         renderer.init().then(() => setFrameloop('always'))
         renderer.xr = { addEventListener: () => {} }
         return renderer

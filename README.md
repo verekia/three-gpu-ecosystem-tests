@@ -53,6 +53,19 @@ The following test cases are less relevant now:
 - `next15-pages-r3f8-react18`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
 - `next15-pages-r3f8-react19`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 
+## Renderer defaults
+
+React Three Fiber normally creates a WebGLRenderer with [these defaults](https://r3f.docs.pmnd.rs/api/canvas#defaults) ([see the code](https://github.com/pmndrs/react-three-fiber/blob/261ee123fcb717be3bd3278f5b432156e1c7b483/packages/fiber/src/core/index.tsx#L113)). Same thing with [Threlte](https://github.com/threlte/threlte/blob/fbc229a52d0bab4a5a0b03b21a2e9849ff6764bc/packages/core/src/lib/lib/useRenderer.ts#L33). For a similar setup with WebGPURenderer, pass the same parameters to the WebGPURenderer constructor:
+
+```js
+const renderer = new WebGPURenderer({
+  canvas,
+  powerPreference: 'high-performance',
+  antialias: true,
+  alpha: true,
+})
+```
+
 ## Top-level Await issues
 
 Some Three.js modules, like `three/examples/jsm/capabilities/WebGPU`, contain top-level await statements.

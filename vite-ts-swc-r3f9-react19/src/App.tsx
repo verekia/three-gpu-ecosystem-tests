@@ -43,8 +43,13 @@ export default function App() {
       style={{ height: '100vh' }}
       frameloop={frameloop}
       gl={canvas => {
-        // @ts-expect-error
-        const renderer = new WebGPURenderer({ canvas })
+        const renderer = new WebGPURenderer({
+          // @ts-expect-error
+          canvas,
+          powerPreference: 'high-performance',
+          antialias: true,
+          alpha: true,
+        })
         renderer.init().then(() => setFrameloop('always'))
         // @ts-expect-error
         renderer.xr = { addEventListener: () => {} }

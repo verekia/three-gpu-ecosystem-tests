@@ -7,7 +7,15 @@
 </script>
 
 <main>
-  <Canvas createRenderer={canvas => new WebGPURenderer({ canvas })}>
+  <Canvas
+    createRenderer={canvas =>
+      new WebGPURenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance',
+      })}
+  >
     <T.PerspectiveCamera makeDefault position={[0, 0, 10]}>
       <OrbitControls />
     </T.PerspectiveCamera>
