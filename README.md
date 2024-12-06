@@ -38,9 +38,7 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
-- ⚠️ WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend. You have to [await the init method](#testing-the-backend-type) before checking the backend type.
-
-- ⚠️ React Three Fiber with `WebGPURenderer` should be delayed with `frameloop="never"` until the backend is initialized, otherwise you will get a [render warning](#r3f-render-called-before-backend-initialized-issue).
+- ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if your wrapper such as R3F tries to render before the backend is initialized. With R3F, you can use `frameloop="never"` to delay the first render call. If you don't, you will get this [render warning](#r3f-render-called-before-backend-initialized-issue).
 
 - ⚠️ Using React Three Fiber with React 19 RC requires installing with `npm i --legacy-peer-deps`.
 
