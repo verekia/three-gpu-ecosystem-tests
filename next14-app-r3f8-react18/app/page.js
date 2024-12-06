@@ -5,7 +5,6 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { WebGPURenderer } from 'three/webgpu'
 import * as TSL from 'three/tsl'
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 
 function Box(props) {
   const meshRef = useRef()
@@ -16,15 +15,10 @@ function Box(props) {
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
   useEffect(() => {
-    console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
-
-    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
-    setTimeout(() => {
-      // @ts-expect-error
-      console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
-    }, 1000)
   }, [])
+
+  console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
   return (
     <mesh
@@ -42,8 +36,18 @@ function Box(props) {
 }
 
 export default function IndexPage() {
+  const [frameloop, setFrameloop] = useState('never')
+
   return (
-    <Canvas style={{ height: '100vh' }} gl={canvas => new WebGPURenderer({ canvas })}>
+    <Canvas
+      style={{ height: '100vh' }}
+      frameloop={frameloop}
+      gl={canvas => {
+        const renderer = new WebGPURenderer({ canvas })
+        renderer.init().then(() => setFrameloop('always'))
+        return renderer
+      }}
+    >
       <OrbitControls />
       <ambientLight intensity={Math.PI / 2} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />

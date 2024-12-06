@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, a call to `WebGPU.isAvailable()` from `examples/jsm/capabilities/WebGPU`, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
+This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
 
 ## How to test
 
@@ -24,12 +24,8 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - `next14-app-r3f8-react18`: ✅
 - `next14-pages-r3f8-react18`: ✅
-- `next15-app-r3f8-react18`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 - `next15-app-r3f9-react19`: ✅
 - `next15-app-r3f9-react19-rsc`: ✅ See [this note](#react-server-components-with-r3f) about RSCs
-- `next15-app-vanilla-react19`: ✅
-- `next15-pages-r3f8-react18`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
-- `next15-pages-r3f8-react19`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 - `next15-pages-r3f9-react19`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
 - `next15-pages-vanilla-react19`: ✅
 - `sveltekit-threlte8`: ✅
@@ -44,11 +40,20 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ WebGPURenderer initially reports WebGPUBackend before falling back to WebGLBackend. You have to [await the init method](#testing-the-backend-type) before checking the backend type.
 
-- ⚠️ React Three Fiber with `WebGPURenderer` always causes a [render warning](#r3f-render-called-before-backend-initialized-issue).
+- ⚠️ React Three Fiber with `WebGPURenderer` should be delayed with `frameloop="never"` until the backend is initialized, otherwise you will get a [render warning](#r3f-render-called-before-backend-initialized-issue).
 
 - ⚠️ Using React Three Fiber with React 19 RC requires installing with `npm i --legacy-peer-deps`.
 
 - ⚠️ Using R3F v9 requires a [fix when initializing the canvas](#react-three-fiber-v9-xr-issue).
+
+### Removed test cases
+
+The following test cases are less relevant now:
+
+- `next15-app-r3f8-react18`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
+- `next15-app-vanilla-react19`: ✅
+- `next15-pages-r3f8-react18`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
+- `next15-pages-r3f8-react19`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
 
 ## Top-level Await issues
 
@@ -104,8 +109,6 @@ const [frameloop, setFrameloop] = useState('never')
   }}
 />
 ```
-
-This fix is implemented in the R3F Vite examples.
 
 ### React Three Fiber v9 XR issue
 

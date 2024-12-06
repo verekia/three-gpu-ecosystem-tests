@@ -4,8 +4,6 @@ import { OrbitControls } from '@react-three/drei'
 import { WebGPURenderer } from 'three/webgpu'
 import type { Mesh } from 'three'
 import * as TSL from 'three/tsl'
-// @ts-expect-error
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 
 function Box(props: any) {
   const meshRef = useRef<Mesh>(null!)
@@ -15,11 +13,11 @@ function Box(props: any) {
 
   useFrame((_, delta) => (meshRef.current.rotation.x += delta))
 
+  // @ts-expect-error
+  console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+
   useEffect(() => {
-    console.log(WebGPU.isAvailable())
     console.log(TSL.sqrt(2))
-    // @ts-expect-error
-    console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
   }, [])
 
   return (

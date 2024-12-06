@@ -1,13 +1,11 @@
 import * as THREE from 'three'
 import { WebGPURenderer } from 'three/webgpu'
 import * as TSL from 'three/tsl'
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 
-console.log(WebGPU.isAvailable())
 console.log(TSL.sqrt(2))
 
-const width = window.innerWidth,
-  height = window.innerHeight
+const width = window.innerWidth
+const height = window.innerHeight
 
 const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10)
 camera.position.z = 1
@@ -21,14 +19,12 @@ const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
 const renderer = new WebGPURenderer({ antialias: true })
+await renderer.init()
 renderer.setSize(width, height)
 renderer.setAnimationLoop(animate)
 document.body.appendChild(renderer.domElement)
 
-// https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
-setTimeout(() => {
-  console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
-}, 1000)
+console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
 function animate(time) {
   mesh.rotation.x = time / 2000

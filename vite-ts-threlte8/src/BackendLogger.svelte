@@ -1,10 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { useThrelte } from '@threlte/core'
-  // @ts-expect-error
-  import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
-
-  console.log(WebGPU.isAvailable())
 
   const { renderer } = useThrelte()
 

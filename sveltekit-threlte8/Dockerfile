@@ -4,10 +4,10 @@ WORKDIR /app
 
 COPY package.json package-lock.json .
 
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 4173
 
 CMD ["npm", "start"]

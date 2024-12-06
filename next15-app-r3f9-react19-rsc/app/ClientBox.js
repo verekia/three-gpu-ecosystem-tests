@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 
 export function ClientBox(props) {
@@ -11,13 +11,7 @@ export function ClientBox(props) {
 
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
-  useEffect(() => {
-    // https://github.com/verekia/three-gpu-ecosystem-tests#testing-the-backend-type
-    setTimeout(() => {
-      // @ts-expect-error
-      console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
-    }, 1000)
-  }, [])
+  console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
   return (
     <mesh

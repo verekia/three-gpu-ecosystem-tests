@@ -6,9 +6,9 @@
     "docker": "docker build -t next15-pages-vanilla-react19 . && docker run -p 3000:3000 next15-pages-vanilla-react19"
   },
   "dependencies": {
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "next": "15.0.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "next": "15.0.4",
     "three": "0.171.0"
   }
 }

@@ -6,11 +6,11 @@
     "docker": "docker build -t next14-pages-r3f8-react18 . && docker run -p 3000:3000 next14-pages-r3f8-react18"
   },
   "dependencies": {
-    "@react-three/drei": "9.117.3",
+    "@react-three/drei": "9.120.0",
     "@react-three/fiber": "8.17.10",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "next": "14.2.18",
+    "next": "14.2.20",
     "three": "0.171.0"
   }
 }
