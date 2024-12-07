@@ -14,7 +14,7 @@ If you have Docker installed:
 
 Otherwise, to test with your local Node.js version:
 
-1. `npm i` (you need `--legacy-peer-deps` with React 19 RC)
+1. `npm i` (you might need `--legacy-peer-deps` React 19)
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
@@ -40,7 +40,7 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if your wrapper such as R3F tries to render before the backend is initialized. With R3F, you can use `frameloop="never"` to delay the first render call. If you don't, you will get this [render warning](#r3f-render-called-before-backend-initialized-issue).
 
-- ⚠️ Using React Three Fiber with React 19 RC requires installing with `npm i --legacy-peer-deps`.
+- ⚠️ Using React Three Fiber with React 19 requires installing with `npm i --legacy-peer-deps`.
 
 - ⚠️ Using R3F v9 requires a [fix when initializing the canvas](#react-three-fiber-v9-xr-issue).
 
@@ -165,7 +165,7 @@ function MyComponent() {
 
 ### ReactCurrentOwner issue
 
-It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 RC in some circumstances.
+It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 in some circumstances.
 
 > ❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
 
@@ -229,8 +229,6 @@ const [frameloop, setFrameloop] = useState('never')
   }}
 />
 ```
-
-This fix is implemented in the R3F Vite examples.
 
 If checking the backend type is not critical (for example you just want to see which one is used when developing locally) you can use a `setTimeout` to keep things simple:
 
