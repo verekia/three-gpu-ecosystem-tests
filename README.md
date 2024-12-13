@@ -266,3 +266,32 @@ The following Drei components have been tested with R3F + WebGPU:
 - ❌ Wireframe: Nothing shows up + `Requires non-indexed geometry, converting to non-indexed geometry.`
 
 You can run one of the R3F test cases of this repo and help complete the list. Don't commit code, just edit this README with the results of your tests.
+
+## Minimal R3F9 + TS + TSL Example
+
+```tsx
+import { extend, type ThreeElement } from '@react-three/fiber'
+import { mix, positionLocal, sin, time, vec3 } from 'three/tsl'
+import { MeshBasicNodeMaterial } from 'three/webgpu'
+
+const red = vec3(1, 0, 0)
+const blue = vec3(0, 0, 1)
+const currentTime = time.mul(0.5)
+const colorNode = mix(red, blue, sin(currentTime))
+const positionNode = positionLocal.add(vec3(0, sin(currentTime).mul(0.2), 0))
+
+extend({ MeshBasicNodeMaterial })
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    meshBasicNodeMaterial: ThreeElement<typeof MeshBasicNodeMaterial>
+  }
+}
+
+const Plane = () => (
+  <mesh scale={5}>
+    <planeGeometry />
+    <meshBasicNodeMaterial colorNode={colorNode} positionNode={positionNode} />
+  </mesh>
+)
+```
