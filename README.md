@@ -184,7 +184,13 @@ You can use React Server Components with R3F. This actually works without `'use 
   <ClientBox position={[1.2, 0, 0]} />
 
   <ambientLight intensity={Math.PI / 2} />
-  <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+  <spotLight
+    position={[10, 10, 10]}
+    angle={0.15}
+    penumbra={1}
+    decay={0}
+    intensity={Math.PI}
+  />
   <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
   <mesh>
     <boxGeometry />
@@ -234,7 +240,9 @@ If checking the backend type is not critical (for example you just want to see w
 
 ```js
 setTimeout(() => {
-  console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+  console.log(
+    renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend'
+  )
 }, 1000)
 ```
 
@@ -266,6 +274,21 @@ The following Drei components have been tested with R3F + WebGPU:
 - ❌ Wireframe: Nothing shows up + `Requires non-indexed geometry, converting to non-indexed geometry.`
 
 You can run one of the R3F test cases of this repo and help complete the list. Don't commit code, just edit this README with the results of your tests.
+
+## Minimal Vanilla Three.js + TSL Example
+
+```js
+import { mix, vec3, uv } from 'three/tsl'
+import { MeshBasicNodeMaterial } from 'three/webgpu'
+
+const red = vec3(1, 0, 0)
+const green = vec3(0, 1, 0)
+const checkerboard = uv().mul(8).floor().dot(1).mod(2)
+const colorNode = mix(red, green, checkerboard)
+
+const material = new MeshBasicNodeMaterial()
+material.colorNode = colorNode
+```
 
 ## Minimal R3F9 + TS + TSL Example
 

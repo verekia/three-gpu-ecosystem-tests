@@ -1,8 +1,12 @@
 import * as THREE from 'three'
 import { WebGPURenderer } from 'three/webgpu'
-import * as TSL from 'three/tsl'
+import { mix, vec3, uv } from 'three/tsl'
+import { MeshBasicNodeMaterial } from 'three/webgpu'
 
-console.log(TSL.sqrt(2))
+const red = vec3(1, 0, 0)
+const green = vec3(0, 1, 0)
+const checkerboard = uv().mul(8).floor().dot(1).mod(2)
+const colorNode = mix(red, green, checkerboard)
 
 const width = window.innerWidth
 const height = window.innerHeight
@@ -13,7 +17,8 @@ camera.position.z = 1
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2)
-const material = new THREE.MeshNormalMaterial()
+const material = new MeshBasicNodeMaterial()
+material.colorNode = colorNode
 
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
@@ -24,7 +29,9 @@ renderer.setSize(width, height)
 renderer.setAnimationLoop(animate)
 document.body.appendChild(renderer.domElement)
 
-console.log(renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
+console.log(
+  renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend'
+)
 
 function animate(time) {
   mesh.rotation.x = time / 2000
