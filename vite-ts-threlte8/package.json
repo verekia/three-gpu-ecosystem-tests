@@ -9,7 +9,7 @@
   "dependencies": {
     "@threlte/core": "8.0.0-next.31",
     "@threlte/extras": "9.0.0-next.42",
-    "three": "0.171.0"
+    "three": "0.173.0"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "5.0.0",

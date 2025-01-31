@@ -42,7 +42,7 @@ export default function App() {
     <Canvas
       style={{ height: '100vh' }}
       frameloop={frameloop}
-      gl={canvas => {
+      gl={(canvas) => {
         const renderer = new WebGPURenderer({
           // @ts-expect-error
           canvas,
@@ -51,14 +51,18 @@ export default function App() {
           alpha: true,
         })
         renderer.init().then(() => setFrameloop('always'))
-        // @ts-expect-error
-        renderer.xr = { addEventListener: () => {} }
         return renderer
       }}
     >
       <OrbitControls />
       <ambientLight intensity={Math.PI / 2} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+      <spotLight
+        position={[10, 10, 10]}
+        angle={0.15}
+        penumbra={1}
+        decay={0}
+        intensity={Math.PI}
+      />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
       <Box position={[-1.2, 0, 0]} />
       <Box position={[1.2, 0, 0]} />

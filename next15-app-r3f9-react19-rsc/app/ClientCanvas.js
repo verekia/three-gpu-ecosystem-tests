@@ -16,7 +16,7 @@ export function ClientCanvas({ children }) {
     <Canvas
       style={{ height: '100vh' }}
       frameloop={frameloop}
-      gl={canvas => {
+      gl={(canvas) => {
         const renderer = new WebGPURenderer({
           canvas,
           powerPreference: 'high-performance',
@@ -24,7 +24,6 @@ export function ClientCanvas({ children }) {
           alpha: true,
         })
         renderer.init().then(() => setFrameloop('always'))
-        renderer.xr = { addEventListener: () => {} }
         return renderer
       }}
     >

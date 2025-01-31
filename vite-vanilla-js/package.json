@@ -9,7 +9,7 @@
     "docker": "docker build -t vite-vanilla-js . && docker run -p 4173:4173 vite-vanilla-js"
   },
   "dependencies": {
-    "three": "0.171.0"
+    "three": "0.173.0"
   },
   "devDependencies": {
     "vite": "5.4.10"

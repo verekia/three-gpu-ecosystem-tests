@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r171** (2024-11-29). All tests use **WebGPURenderer**, a call a **TSL** function, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
+This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r173** (2025-01-31). All tests use **WebGPURenderer**, a call a **TSL** function, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
 
 ## How to test
 
@@ -41,8 +41,6 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 - ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if your wrapper such as R3F tries to render before the backend is initialized. With R3F, you can use `frameloop="never"` to delay the first render call. If you don't, you will get this [render warning](#r3f-render-called-before-backend-initialized-issue).
 
 - ⚠️ Using React Three Fiber with React 19 requires installing with `npm i --legacy-peer-deps`.
-
-- ⚠️ Using R3F v9 requires a [fix when initializing the canvas](#react-three-fiber-v9-xr-issue).
 
 ### Removed test cases
 
@@ -121,24 +119,6 @@ const [frameloop, setFrameloop] = useState('never')
 />
 ```
 
-### React Three Fiber v9 XR issue
-
-If you use R3F v9, you will get this error on your Canvas:
-
-> ❌ `TypeError: gl.xr.addEventListener is not a function`
-
-It can be fixed with:
-
-```jsx
-<Canvas
-  gl={canvas => {
-    const renderer = new WebGPURenderer({ canvas })
-    renderer.xr = { addEventListener: () => {} }
-    return renderer
-  }}
->
-```
-
 ## SSR issues with Next.js and Node.js
 
 Next.js uses Node.js to Server-Side Render pages on the server. When importing modules on the server, if those modules reference global browser objects like `window`, `document`, `self`, or `navigator` at the top level, you will get a compilation error. _Except_ for `navigator`, which got [added to Node.js 21](https://nodejs.org/en/blog/announcements/v21-release-announce#navigator-object-integration).
@@ -208,6 +188,8 @@ You can use React Server Components with R3F. This actually works without `'use 
 > `TypeError: Cannot read properties of undefined (reading 'pathname')`
 
 [Issue on Next.js repo](https://github.com/vercel/next.js/issues/71974).
+
+**Fixed in `15.1.1-canary.24`.**
 
 ## Testing the backend type
 
