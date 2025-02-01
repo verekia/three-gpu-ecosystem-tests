@@ -1,7 +1,15 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useRef, useMemo, useState } from 'react'
+import { useFrame, useThree, extend } from '@react-three/fiber'
+import { MeshStandardNodeMaterial } from 'three/webgpu'
+import { uniform } from 'three/tsl'
+import { Color } from 'three'
+
+extend({ MeshStandardNodeMaterial })
+
+const red = new Color('red')
+const blue = new Color('blue')
 
 export function ClientBox(props) {
   const meshRef = useRef()
@@ -13,6 +21,10 @@ export function ClientBox(props) {
 
   console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
+  const uColor = useMemo(() => uniform(blue), [])
+
+  uColor.value = hovered ? red : blue
+
   return (
     <mesh
       {...props}
@@ -23,7 +35,7 @@ export function ClientBox(props) {
       onPointerOut={() => setHover(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      <meshStandardNodeMaterial colorNode={uColor} />
     </mesh>
   )
 }

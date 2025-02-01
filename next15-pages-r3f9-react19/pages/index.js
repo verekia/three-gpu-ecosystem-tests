@@ -1,8 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import React, { useRef, useMemo, useState } from 'react'
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { WebGPURenderer } from 'three/webgpu'
-import * as TSL from 'three/tsl'
+import { WebGPURenderer, MeshStandardNodeMaterial } from 'three/webgpu'
+import { uniform } from 'three/tsl'
+import { Color } from 'three'
+
+extend({ MeshStandardNodeMaterial })
+
+const red = new Color('red')
+const blue = new Color('blue')
+
+process.env.NODE_ENV === 'development' &&
+  console.log(
+    'The appIsrManifest error is fixed in Next.js 15.1.1-canary.24 (not merged into the main release yet)'
+  )
 
 function Box(props) {
   const meshRef = useRef()
@@ -14,9 +25,9 @@ function Box(props) {
 
   console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
-  useEffect(() => {
-    console.log(TSL.sqrt(2))
-  }, [])
+  const uColor = useMemo(() => uniform(blue), [])
+
+  uColor.value = hovered ? red : blue
 
   return (
     <mesh
@@ -28,26 +39,18 @@ function Box(props) {
       onPointerOut={() => setHover(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      <meshStandardNodeMaterial colorNode={uColor} />
     </mesh>
   )
 }
 
 export default function IndexPage() {
-  const [frameloop, setFrameloop] = useState('never')
-
   return (
     <Canvas
       style={{ height: '100vh' }}
-      frameloop={frameloop}
-      gl={(canvas) => {
-        const renderer = new WebGPURenderer({
-          canvas,
-          powerPreference: 'high-performance',
-          antialias: true,
-          alpha: true,
-        })
-        renderer.init().then(() => setFrameloop('always'))
+      gl={async (glProps) => {
+        const renderer = new WebGPURenderer(glProps)
+        await renderer.init()
         return renderer
       }}
     >

@@ -1,9 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { useMemo, useRef, useState } from 'react'
+import {
+  Canvas,
+  useFrame,
+  useThree,
+  extend,
+  ThreeElement,
+} from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { WebGPURenderer } from 'three/webgpu'
-import type { Mesh } from 'three'
-import * as TSL from 'three/tsl'
+import { WebGPURenderer, MeshStandardNodeMaterial } from 'three/webgpu'
+import { uniform } from 'three/tsl'
+import { Color, type Mesh } from 'three'
+
+extend({ MeshStandardNodeMaterial })
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    meshStandardNodeMaterial: ThreeElement<typeof MeshStandardNodeMaterial>
+  }
+}
+
+const red = new Color('red')
+const blue = new Color('blue')
 
 function Box(props: any) {
   const meshRef = useRef<Mesh>(null!)
@@ -16,9 +33,9 @@ function Box(props: any) {
   // @ts-expect-error
   console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
-  useEffect(() => {
-    console.log(TSL.sqrt(2))
-  }, [])
+  const uColor = useMemo(() => uniform(blue), [])
+
+  uColor.value = hovered ? red : blue
 
   return (
     <mesh
@@ -30,27 +47,19 @@ function Box(props: any) {
       onPointerOut={() => setHover(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      <meshStandardNodeMaterial colorNode={uColor} />
     </mesh>
   )
 }
 
 export default function App() {
-  const [frameloop, setFrameloop] = useState<'never' | 'always'>('never')
-
   return (
     <Canvas
       style={{ height: '100vh' }}
-      frameloop={frameloop}
-      gl={(canvas) => {
-        const renderer = new WebGPURenderer({
-          // @ts-expect-error
-          canvas,
-          powerPreference: 'high-performance',
-          antialias: true,
-          alpha: true,
-        })
-        renderer.init().then(() => setFrameloop('always'))
+      gl={async (glProps) => {
+        // @ts-expect-error
+        const renderer = new WebGPURenderer(glProps)
+        await renderer.init()
         return renderer
       }}
     >

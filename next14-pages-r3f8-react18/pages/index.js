@@ -1,8 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import React, { useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { WebGPURenderer } from 'three/webgpu'
-import * as TSL from 'three/tsl'
+import { WebGPURenderer, MeshStandardNodeMaterial } from 'three/webgpu'
+import { uniform } from 'three/tsl'
+import { Color } from 'three'
+
+extend({ MeshStandardNodeMaterial })
+
+const red = new Color('red')
+const blue = new Color('blue')
 
 function Box(props) {
   const meshRef = useRef()
@@ -14,9 +20,9 @@ function Box(props) {
 
   console.log(gl.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend')
 
-  useEffect(() => {
-    console.log(TSL.sqrt(2))
-  }, [])
+  const uColor = useMemo(() => uniform(blue), [])
+
+  uColor.value = hovered ? red : blue
 
   return (
     <mesh
@@ -28,7 +34,7 @@ function Box(props) {
       onPointerOut={() => setHover(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      <meshStandardNodeMaterial colorNode={uColor} />
     </mesh>
   )
 }
@@ -40,7 +46,7 @@ export default function IndexPage() {
     <Canvas
       style={{ height: '100vh' }}
       frameloop={frameloop}
-      gl={canvas => {
+      gl={(canvas) => {
         const renderer = new WebGPURenderer({
           canvas,
           powerPreference: 'high-performance',
@@ -53,7 +59,13 @@ export default function IndexPage() {
     >
       <OrbitControls />
       <ambientLight intensity={Math.PI / 2} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+      <spotLight
+        position={[10, 10, 10]}
+        angle={0.15}
+        penumbra={1}
+        decay={0}
+        intensity={Math.PI}
+      />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
       <Box position={[-1.2, 0, 0]} />
       <Box position={[1.2, 0, 0]} />

@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r173** (2025-01-31). All tests use **WebGPURenderer**, a call a **TSL** function, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
+This is a collection of tests that incrementally add complexity to the setup. Testing is done with Three.js **r173** (2025-01-31). All tests use **WebGPURenderer**, a **TSL** node, and a test of the graphics backend type used. With vanilla [Three.js](https://threejs.org/), [React Three Fiber](https://r3f.docs.pmnd.rs/), and [Threlte](https://threlte.xyz/).
 
 ## How to test
 
@@ -14,7 +14,7 @@ If you have Docker installed:
 
 Otherwise, to test with your local Node.js version:
 
-1. `npm i` (you might need `--legacy-peer-deps` React 19)
+1. `npm i`
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
@@ -38,31 +38,7 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
-- ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if your wrapper such as R3F tries to render before the backend is initialized. With R3F, you can use `frameloop="never"` to delay the first render call. If you don't, you will get this [render warning](#r3f-render-called-before-backend-initialized-issue).
-
-- ⚠️ Using React Three Fiber with React 19 requires installing with `npm i --legacy-peer-deps`.
-
-### Removed test cases
-
-The following test cases are less relevant now:
-
-- `next15-app-r3f8-react18`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
-- `next15-app-vanilla-react19`: ✅
-- `next15-pages-r3f8-react18`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
-- `next15-pages-r3f8-react19`: ❌ [`ReactCurrentOwner` error](#reactcurrentowner-issue)
-
-## Renderer defaults
-
-React Three Fiber normally creates a WebGLRenderer with [these defaults](https://r3f.docs.pmnd.rs/api/canvas#defaults) ([see the code](https://github.com/pmndrs/react-three-fiber/blob/261ee123fcb717be3bd3278f5b432156e1c7b483/packages/fiber/src/core/index.tsx#L113)). Same thing with [Threlte](https://github.com/threlte/threlte/blob/fbc229a52d0bab4a5a0b03b21a2e9849ff6764bc/packages/core/src/lib/lib/useRenderer.ts#L33). For a similar setup with WebGPURenderer, pass the same parameters to the WebGPURenderer constructor:
-
-```js
-const renderer = new WebGPURenderer({
-  canvas,
-  powerPreference: 'high-performance',
-  antialias: true,
-  alpha: true,
-})
-```
+- ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if your wrapper such as Threlte or Tres tries to render before the backend is initialized. With R3F, you can use `frameloop="never"` to delay the first render call. If you don't, you will get this [render warning](#render-called-before-backend-initialized-issue).
 
 ## Top-level Await issues
 
@@ -96,27 +72,6 @@ Importing a module with top-level await will give you this warning in the browse
 The generated code contains 'async/await' because this module is using "topLevelAwait".
 However, your target environment does not appear to support 'async/await'.
 As a result, the code may not run as expected or may cause runtime errors.
-```
-
-### R3F render called before backend initialized issue
-
-This warning is caused by using R3F with WebGPURenderer.
-
-> ⚠️ `THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.`
-
-There is a workaround:
-
-```jsx
-const [frameloop, setFrameloop] = useState('never')
-
-<Canvas
-  frameloop={frameloop}
-  gl={(canvas) => {
-    const renderer = new WebGPURenderer({ canvas })
-    renderer.init().then(() => setFrameloop('always'))
-    return renderer
-  }}
-/>
 ```
 
 ## SSR issues with Next.js and Node.js
@@ -206,26 +161,13 @@ console.log(renderer.backend) // WebGPUBackend or WebGLBackend
 With React Three Fiber:
 
 ```js
-const [frameloop, setFrameloop] = useState('never')
-
 <Canvas
-  frameloop={frameloop}
-  gl={(canvas) => {
-    const renderer = new WebGPURenderer({ canvas })
-    renderer.init().then(() => setFrameloop('always'))
+  gl={async (glProps) => {
+    const renderer = new WebGPURenderer(glProps)
+    await renderer.init()
     return renderer
   }}
 />
-```
-
-If checking the backend type is not critical (for example you just want to see which one is used when developing locally) you can use a `setTimeout` to keep things simple:
-
-```js
-setTimeout(() => {
-  console.log(
-    renderer.backend.isWebGPUBackend ? 'WebGPU Backend' : 'WebGL Backend'
-  )
-}, 1000)
 ```
 
 ## Drei Compatibility
