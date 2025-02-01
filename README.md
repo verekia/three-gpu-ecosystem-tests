@@ -27,7 +27,6 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 - `next15-app-r3f9-react19`: ✅
 - `next15-app-r3f9-react19-rsc`: ✅ See [this note](#react-server-components-with-r3f) about RSCs
 - `next15-pages-r3f9-react19`: ✅ Unrelated Next.js [HMR warning](#hmr-appisrmanifest-issue)
-- `next15-pages-vanilla-react19`: ✅
 - `sveltekit-threlte8`: ✅
 - `vite-ts-swc-r3f8-react18`: ✅
 - `vite-ts-swc-r3f9-react19`: ✅
@@ -38,7 +37,7 @@ A ✅ means the scene renders, and the project works in dev mode, and in product
 
 - ⚠️ Importing a module with top-level await such as `three/examples/jsm/capabilities/WebGPU.js` requires a [Vite config change and causes warnings in Next.js](#top-level-await-issues).
 
-- ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if your wrapper such as Threlte or Tres tries to render before the backend is initialized. With R3F, you can use `frameloop="never"` to delay the first render call. If you don't, you will get this [render warning](#render-called-before-backend-initialized-issue).
+- ⚠️ WebGPURenderer is initialized with WebGPUBackend before falling back to WebGLBackend. You should [await the init method](#testing-the-backend-type) before checking the backend type or if encounter this [render warning](#render-called-before-backend-initialized-issue).
 
 ## Top-level Await issues
 
