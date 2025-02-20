@@ -99,13 +99,13 @@ function MyComponent() {
 
 ### ReactCurrentOwner issue
 
-It seems like React Three Fiber 8 is not compatible with Next.js 15 or React 19 in some circumstances.
-
 > ❌ `TypeError: Cannot read properties of undefined (reading 'ReactCurrentOwner')`
 
 Also a related error during builds:
 
 > ❌ Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')
+
+With Next 15, use React Three Fiber v9.
 
 ### React Server Components with R3F
 
@@ -215,24 +215,29 @@ material.colorNode = colorNode
 
 ## Minimal R3F9 + TS + TSL Example
 
+Extend somewhere top-level in your codebase (in your \_app.tsx in Next.js for example):
+
+```ts
+import * as THREE from 'three/webgpu'
+import { Canvas, extend, type ThreeToJSXElements } from '@react-three/fiber'
+
+declare module '@react-three/fiber' {
+  interface ThreeElements extends ThreeToJSXElements<typeof THREE> {}
+}
+
+extend(THREE as any)
+```
+
+Then:
+
 ```tsx
-import { extend, type ThreeElement } from '@react-three/fiber'
 import { mix, positionLocal, sin, time, vec3 } from 'three/tsl'
-import { MeshBasicNodeMaterial } from 'three/webgpu'
 
 const red = vec3(1, 0, 0)
 const blue = vec3(0, 0, 1)
 const currentTime = time.mul(0.5)
 const colorNode = mix(red, blue, sin(currentTime))
 const positionNode = positionLocal.add(vec3(0, sin(currentTime).mul(0.2), 0))
-
-extend({ MeshBasicNodeMaterial })
-
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    meshBasicNodeMaterial: ThreeElement<typeof MeshBasicNodeMaterial>
-  }
-}
 
 const Plane = () => (
   <mesh scale={5}>

@@ -1,13 +1,11 @@
 'use client'
 
 import React, { useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { WebGPURenderer, MeshStandardNodeMaterial } from 'three/webgpu'
+import { WebGPURenderer } from 'three/webgpu'
 import { uniform } from 'three/tsl'
 import { Color } from 'three'
-
-extend({ MeshStandardNodeMaterial })
 
 const red = new Color('red')
 const blue = new Color('blue')

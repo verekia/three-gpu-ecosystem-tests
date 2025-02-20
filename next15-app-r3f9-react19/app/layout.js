@@ -1,3 +1,7 @@
+'use client'
+
+import '../lib/extend'
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
