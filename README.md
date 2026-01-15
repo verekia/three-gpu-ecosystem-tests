@@ -18,9 +18,7 @@ Otherwise, to test with your local Node.js version:
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
-## Problems
-
-Peer-deps installation:
+## ❌ Peer-deps installation
 
 ```
 ➜  next-pages git:(main) ✗ npm i
@@ -37,6 +35,10 @@ npm error peer @react-three/fiber@">=9.0.0" from @react-three/drei@11.0.0-alpha.
 npm error node_modules/@react-three/drei
 npm error   @react-three/drei@"11.0.0-alpha.1" from the root project
 ```
+
+Used `--legacy-peer-deps` to be able to install
+
+## ❌ node:module present in Drei
 
 Next.js dev or build:
 
