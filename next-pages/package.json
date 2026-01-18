@@ -13,5 +13,12 @@
     "react-dom": "19.2.3",
     "next": "16.1.2",
     "three": "0.182.0"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.9",
+    "@types/react": "19.2.8",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "0.182.0",
+    "typescript": "5.9.3"
   }
 }

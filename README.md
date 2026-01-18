@@ -47,7 +47,9 @@ npm error   @react-three/drei@"11.0.0-alpha.1" from the root project
 
  Ok in dev and prod.
 
-## ✅ Next.js Pages Router
+## ❌ Next.js Pages Router
 
- Ok in dev and prod.
+In dev and prod builds:
+
+> Failed to load external module @react-three/drei-55417cbbf7f59941/core: SyntaxError: The requested module 'detect-gpu' does not provide an export named 'getGPUTier'
 
