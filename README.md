@@ -83,3 +83,5 @@ Add to Next.js config:
 ```js
 transpilePackages: ['@react-three/drei'],
 ```
+
+(causes slower builds and startup times)
