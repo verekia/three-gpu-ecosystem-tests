@@ -52,3 +52,26 @@ npm error   @react-three/drei@"11.0.0-alpha.1" from the root project
 In dev and prod builds:
 
 > Failed to load external module @react-three/drei-55417cbbf7f59941/core: SyntaxError: The requested module 'detect-gpu' does not provide an export named 'getGPUTier'
+
+### Suggested fix
+
+Adding this to detect-gpu's package json fixes the build:
+
+```json
+"exports": {
+  ".": {
+    "import": "./dist/detect-gpu.esm.js",
+    "require": "./dist/detect-gpu.umd.js"
+  }
+},
+```
+
+### Workaround
+
+Adding this to next.config.mjs fixes the issue, but this causes slower build times and startup:
+
+```js
+transpilePackages: ['@react-three/drei']
+```
+
+https://publint.dev/detect-gpu@5.0.70
