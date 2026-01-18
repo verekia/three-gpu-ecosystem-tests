@@ -60,18 +60,18 @@ Loading the page in dev mode or building for prod:
 
 > There are 15 imports missing .js in total:
 
-> 9 three/examples/jsm/controls/FirstPersonControls
-> 25	three/examples/jsm/modifiers/CurveModifier
-> 28	three/examples/jsm/geometries/TextGeometry
-> 29	three/examples/jsm/loaders/FontLoader
-> 34	three/examples/jsm/loaders/SVGLoader
-> 36	three/examples/jsm/loaders/FBXLoader
-> 37	three/examples/jsm/loaders/GLTFLoader
-> 38	three/examples/jsm/loaders/DRACOLoader
-> 40	three/examples/jsm/loaders/KTX2Loader
-> 45	three/examples/jsm/objects/GroundedSkybox
-> 46	three/examples/jsm/loaders/RGBELoader
-> 47	three/examples/jsm/loaders/EXRLoader
-> 51	three/examples/jsm/shaders/HorizontalBlurShader
-> 52	three/examples/jsm/shaders/VerticalBlurShader
-> 53	three/examples/jsm/interactive/SelectionBox
+- three/examples/jsm/controls/FirstPersonControls
+- three/examples/jsm/modifiers/CurveModifier
+- three/examples/jsm/geometries/TextGeometry
+- three/examples/jsm/loaders/FontLoader
+- three/examples/jsm/loaders/SVGLoader
+- three/examples/jsm/loaders/FBXLoader
+- three/examples/jsm/loaders/GLTFLoader
+- three/examples/jsm/loaders/DRACOLoader
+- three/examples/jsm/loaders/KTX2Loader
+- three/examples/jsm/objects/GroundedSkybox
+- three/examples/jsm/loaders/RGBELoader
+- three/examples/jsm/loaders/EXRLoader
+- three/examples/jsm/shaders/HorizontalBlurShader
+- three/examples/jsm/shaders/VerticalBlurShader
+- three/examples/jsm/interactive/SelectionBox
