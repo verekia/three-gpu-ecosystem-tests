@@ -1,8 +1,9 @@
 'use client'
 
-import { Canvas, useUniforms, useNodes, useLocalNodes } from '@react-three/fiber/webgpu'
+import { Canvas, useUniforms, useNodes, useLocalNodes, useFrame } from '@react-three/fiber/webgpu'
 import { OrbitControls } from '@react-three/drei/core'
 import { Fn, vec3, sin, time, positionLocal, normalLocal } from 'three/tsl'
+import { useRef } from 'react'
 
 const GlobalEffects = () => {
   useNodes(() => ({
@@ -26,11 +27,29 @@ const WobblySphere = () => {
     </mesh>
   )
 }
+
+const UI = () => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useFrame(({ elapsed }) => {
+    if (ref.current) {
+      ref.current.innerText = `${elapsed.toFixed(2)}`
+    }
+  })
+
+  return (
+    <div ref={ref} style={{ position: 'fixed', top: 20, right: 20 }} />
+  )
+}
+
 const IndexPage = () => (
-  <Canvas style={{ height: '100vh' }}>
-    <OrbitControls />
-    <GlobalEffects />
-    <WobblySphere />
-  </Canvas>
+  <>
+    <Canvas style={{ height: '100vh' }}>
+      <OrbitControls />
+      <GlobalEffects />
+      <WobblySphere />
+    </Canvas>
+    <UI />
+  </>
 )
 export default IndexPage
