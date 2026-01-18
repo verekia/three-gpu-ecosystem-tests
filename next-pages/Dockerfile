@@ -1,10 +1,10 @@
-FROM node:20.18.1-alpine3.19
+FROM node:25-alpine
 
 WORKDIR /app
 
 COPY package.json package-lock.json .
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 COPY . .
 

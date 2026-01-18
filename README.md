@@ -10,11 +10,11 @@ If you have Docker installed:
 
 - `npm run docker` to build and run the app in production mode.
 
-> The Docker image uses Node 20, before `navigator` was added in Node 21.
+> The Docker image uses Node 25.
 
 Otherwise, to test with your local Node.js version:
 
-1. `npm i`
+1. `npm i --legacy-peer-deps`
 2. `npm run dev` to check how it works in development.
 3. `npm run start` to check how it works in production.
 
@@ -36,72 +36,42 @@ npm error node_modules/@react-three/drei
 npm error   @react-three/drei@"11.0.0-alpha.1" from the root project
 ```
 
-Used `--legacy-peer-deps` to be able to install
+**Used `--legacy-peer-deps` to be able to install**.
 
-## ❌ node:module present in Drei
 
-Next.js dev or build:
+## ✅ Vite
 
-```
-Code generation for chunk item errored
-./node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs
+ Ok in dev and prod.
 
-Code generation for chunk item errored
-An error occurred while generating the chunk item [project]/node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs [client] (ecmascript)
+## ✅ Next.js App Router
 
-Caused by:
-- the chunking context (unknown) does not support external modules (request: node:module)
+ Ok in dev and prod.
 
-Debug info:
-- An error occurred while generating the chunk item [project]/node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs [client] (ecmascript)
-- Execution of <ModuleChunkItem as EcmascriptChunkItem>::content_with_async_module_info failed
-- Execution of *EcmascriptChunkItemContent::new failed
-- Execution of EcmascriptModuleContent::new failed
-- the chunking context (unknown) does not support external modules (request: node:module)
+## ❌ Next.js Pages Router
 
-Import trace:
-  Browser:
-    ./node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs
-    ./node_modules/@react-three/drei/index.mjs
-    ./pages/index.js
-```
+Loading the page in dev mode or building for prod:
 
-Vite in dev:
+> [!CAUTION]
+> Failed to load external module @react-three/drei-55417cbbf7f59941/core: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/verekia/Local/Code/three-gpu-ecosystem-tests/next-pages/node_modules/three/examples/jsm/controls/FirstPersonControls' imported from /Users/verekia/Local/Code/three-gpu-ecosystem-tests/next-pages/node_modules/@react-three/drei/core/index.mjs
 
-```
-Module "node:module" has been externalized for browser compatibility. Cannot access "node:module.createRequire" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
-get @ @react-three_drei.js?v=e0c6e482:254
-(anonymous) @ @react-three_drei.js?v=e0c6e482:303
-@react-three_drei.js?v=e0c6e482:303 Uncaught TypeError: (0 , import_node_module.createRequire) is not a function
-    at @react-three_drei.js?v=e0c6e482:303:54
-```
+### Claude's suggestion
 
-Vite build:
+> In @react-three/drei/core/index.mjs: The FirstPersonControls import is missing the .js extension, while other similar imports have it.
 
-```
-> tsc -b && vite build && vite preview --host
+> There are 15 imports missing .js in total:
 
-vite v5.4.10 building for production...
-[plugin:vite:resolve] [plugin vite:resolve] Module "node:module" has been externalized for browser compatibility, imported by "/Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
-✓ 472 modules transformed.
-x Build failed in 1.37s
-error during build:
-node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs (1:9): "createRequire" is not exported by "__vite-browser-external", imported by "node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs".
-file: /Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/@react-three/drei/_chunks/rolldown-runtime.mjs:1:9
-
-1: import { createRequire } from "node:module";
-            ^
-2:
-3: //#region rolldown:runtime
-
-    at getRollupError (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/parseAst.js:396:41)
-    at error (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/parseAst.js:392:42)
-    at Module.error (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:15593:16)
-    at Module.traceVariable (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:16042:29)
-    at ModuleScope.findVariable (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:13825:39)
-    at Identifier.bind (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:5071:40)
-    at CallExpression.bind (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:2658:23)
-    at CallExpression.bind (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:11289:15)
-    at VariableDeclarator.bind (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:2658:23)
-    at VariableDeclaration.bind (file:///Users/verekia/Local/Code/three-gpu-ecosystem-tests/vite/node_modules/rollup/dist/es/shared/node-entry.js:2654:28)
-```
+> 9 three/examples/jsm/controls/FirstPersonControls
+> 25	three/examples/jsm/modifiers/CurveModifier
+> 28	three/examples/jsm/geometries/TextGeometry
+> 29	three/examples/jsm/loaders/FontLoader
+> 34	three/examples/jsm/loaders/SVGLoader
+> 36	three/examples/jsm/loaders/FBXLoader
+> 37	three/examples/jsm/loaders/GLTFLoader
+> 38	three/examples/jsm/loaders/DRACOLoader
+> 40	three/examples/jsm/loaders/KTX2Loader
+> 45	three/examples/jsm/objects/GroundedSkybox
+> 46	three/examples/jsm/loaders/RGBELoader
+> 47	three/examples/jsm/loaders/EXRLoader
+> 51	three/examples/jsm/shaders/HorizontalBlurShader
+> 52	three/examples/jsm/shaders/VerticalBlurShader
+> 53	three/examples/jsm/interactive/SelectionBox

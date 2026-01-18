@@ -1,13 +1,14 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "start": "next build && next start",
     "docker": "docker build -t next-app . && docker run -p 3000:3000 next-app"
   },
   "dependencies": {
-    "@react-three/drei": "11.0.0-alpha.1",
-    "@react-three/fiber": "10.0.0-alpha.0",
+    "@react-three/drei": "11.0.0-alpha.3",
+    "@react-three/fiber": "10.0.0-alpha.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "next": "16.1.2",
