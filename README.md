@@ -47,41 +47,7 @@ npm error   @react-three/drei@"11.0.0-alpha.1" from the root project
 
  Ok in dev and prod.
 
-## ❌ Next.js Pages Router
+## ✅ Next.js Pages Router
 
-Loading the page in dev mode or building for prod:
+ Ok in dev and prod.
 
-> [!CAUTION]
-> Failed to load external module @react-three/drei-55417cbbf7f59941/core: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/verekia/Local/Code/three-gpu-ecosystem-tests/next-pages/node_modules/three/examples/jsm/controls/FirstPersonControls' imported from /Users/verekia/Local/Code/three-gpu-ecosystem-tests/next-pages/node_modules/@react-three/drei/core/index.mjs
-
-### Claude's suggestion
-
-> In @react-three/drei/core/index.mjs: The FirstPersonControls import is missing the .js extension, while other similar imports have it.
-
-> There are 15 imports missing .js in total:
-
-- three/examples/jsm/controls/FirstPersonControls
-- three/examples/jsm/modifiers/CurveModifier
-- three/examples/jsm/geometries/TextGeometry
-- three/examples/jsm/loaders/FontLoader
-- three/examples/jsm/loaders/SVGLoader
-- three/examples/jsm/loaders/FBXLoader
-- three/examples/jsm/loaders/GLTFLoader
-- three/examples/jsm/loaders/DRACOLoader
-- three/examples/jsm/loaders/KTX2Loader
-- three/examples/jsm/objects/GroundedSkybox
-- three/examples/jsm/loaders/RGBELoader
-- three/examples/jsm/loaders/EXRLoader
-- three/examples/jsm/shaders/HorizontalBlurShader
-- three/examples/jsm/shaders/VerticalBlurShader
-- three/examples/jsm/interactive/SelectionBox
-
-### Workaround
-
-Add to Next.js config:
-
-```js
-transpilePackages: ['@react-three/drei'],
-```
-
-(causes slower builds and startup times)

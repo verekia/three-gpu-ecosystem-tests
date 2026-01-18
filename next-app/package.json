@@ -7,7 +7,7 @@
     "docker": "docker build -t next-app . && docker run -p 3000:3000 next-app"
   },
   "dependencies": {
-    "@react-three/drei": "11.0.0-alpha.3",
+    "@react-three/drei": "11.0.0-alpha.4",
     "@react-three/fiber": "10.0.0-alpha.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
