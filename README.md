@@ -75,3 +75,11 @@ Loading the page in dev mode or building for prod:
 - three/examples/jsm/shaders/HorizontalBlurShader
 - three/examples/jsm/shaders/VerticalBlurShader
 - three/examples/jsm/interactive/SelectionBox
+
+### Workaround
+
+Add to Next.js config:
+
+```js
+transpilePackages: ['@react-three/drei'],
+```
