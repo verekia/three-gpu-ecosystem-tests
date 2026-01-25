@@ -1,5 +1,5 @@
 import { Canvas, useUniforms, useNodes, useLocalNodes, useFrame } from '@react-three/fiber/webgpu'
-import { OrbitControls } from '@react-three/drei/core'
+import { OrbitControls } from '@react-three/drei/webgpu'
 import { Fn, vec3, sin, time, positionLocal, normalLocal } from 'three/tsl'
 import { useRef } from 'react'
 
@@ -35,11 +35,8 @@ const UI = () => {
     }
   })
 
-  return (
-    <div ref={ref} style={{ position: 'fixed', top: 20, right: 20 }} />
-  )
+  return <div ref={ref} style={{ position: 'fixed', top: 20, right: 20 }} />
 }
-
 
 const IndexPage = () => (
   <>
