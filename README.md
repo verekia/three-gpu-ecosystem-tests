@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This repository now tests R3F 10 Alpha ([commit 723622e](https://github.com/pmndrs/react-three-fiber/commit/723622e675a02234246aa1e4e49ace4b48e14410)) and Drei 11 Alpha only, with Next 16 and Vite.
+This repository now tests R3F 10 Alpha ([commit 723622e](https://github.com/pmndrs/react-three-fiber/commit/723622e675a02234246aa1e4e49ace4b48e14410)) and Drei 11 Alpha only, with Next 16 and Vite, with React Compiler enabled.
 
 ## How to test
 
