@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This repository now tests R3F 10 Alpha and Drei 11 Alpha only, with Next 16 and Vite.
+This repository now tests R3F 10 Alpha ([commit 723622e](https://github.com/pmndrs/react-three-fiber/commit/723622e675a02234246aa1e4e49ace4b48e14410)) and Drei 11 Alpha only, with Next 16 and Vite.
 
 ## How to test
 
@@ -38,14 +38,13 @@ npm error   @react-three/drei@"11.0.0-alpha.1" from the root project
 
 **Used `--legacy-peer-deps` to be able to install**.
 
-
 ## ✅ Vite
 
- Ok in dev and prod.
+Ok in dev and prod.
 
 ## ✅ Next.js App Router
 
- Ok in dev and prod.
+Ok in dev and prod.
 
 ## ❌ Next.js Pages Router
 
@@ -66,7 +65,7 @@ Adding this to detect-gpu's package json fixes the build:
 },
 ```
 
-### Workaround
+### Workarounds
 
 Adding this to next.config.mjs fixes the issue, but this causes slower build times and startup:
 
@@ -75,3 +74,48 @@ transpilePackages: ['@react-three/drei']
 ```
 
 https://publint.dev/detect-gpu@5.0.70
+
+If you use Bun, here is a Bun patch to add to your repo:
+
+**patches/detect-gpu@5.0.70.patch**
+
+```diff
+diff --git a/package.json b/package.json
+index 22ffa92b457c0d83c052eab3f1961110d134d1b3..4f5f9ef7a8a80d6f85e3e5b241a87091d95bbe39 100644
+--- a/package.json
++++ b/package.json
+@@ -7,6 +7,12 @@
+   "main": "dist/detect-gpu.umd.js",
+   "module": "dist/detect-gpu.esm.js",
+   "types": "dist/src/index.d.ts",
++  "exports": {
++    ".": {
++      "import": "./dist/detect-gpu.esm.js",
++      "require": "./dist/detect-gpu.umd.js"
++    }
++  },
+   "homepage": "https://github.com/pmndrs/detect-gpu#readme",
+   "bugs": {
+     "url": "https://github.com/pmndrs/detect-gpu/issues"
+```
+
+add to your `package.json`:
+
+```json
+  "patchedDependencies": {
+    "detect-gpu@5.0.70": "patches/detect-gpu@5.0.70.patch"
+  },
+```
+
+### HMR Warning
+
+Getting this (maybe unrelated) warning:
+
+```
+[HMR] Invalid message: {"type":"isrManifest","data":{"/":true}}
+TypeError: Cannot read properties of undefined (reading 'components')
+    at handleStaticIndicator (hot-reloader-pages.ts:257:42)
+    at processMessage (hot-reloader-pages.ts:279:7)
+    at hot-reloader-pages.ts:100:7
+    at WebSocket.handleMessage (websocket.ts:68:9)
+```

@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@react-three/drei": "11.0.0-alpha.4",
-    "@react-three/fiber": "10.0.0-alpha.1",
+    "@react-three/fiber": "file:r3f-723622e675a02234246aa1e4e49ace4b48e14410.tgz",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "three": "0.182.0"
