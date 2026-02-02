@@ -1,6 +1,6 @@
 # Three.js WebGPU Ecosystem Integration Test Suite
 
-This repository now tests R3F 10 Alpha ([commit 723622e](https://github.com/pmndrs/react-three-fiber/commit/723622e675a02234246aa1e4e49ace4b48e14410)) and Drei 11 Alpha only, with Next 16 and Vite, with React Compiler enabled.
+This repository now tests R3F 10 Alpha Canary and Drei 11 Alpha only, with Next 16 and Vite, with React Compiler enabled.
 
 ## How to test
 
@@ -119,3 +119,23 @@ TypeError: Cannot read properties of undefined (reading 'components')
     at hot-reloader-pages.ts:100:7
     at WebSocket.handleMessage (websocket.ts:68:9)
 ```
+
+## ShaderChunk issue
+
+Imorting some Drei modules from `@react-three/drei/webgpu/webgpu` such as:
+
+```js
+import { OrbitControls } from '@react-three/drei/webgpu'`
+```
+
+Causes these warnings in Vite and errors in Next.js:
+
+```
+node_modules/@react-three/drei/webgpu/index.mjs (258:28): "UniformsUtils" is not exported by "node_modules/three/build/three.webgpu.js", imported by "node_modules/@react-three/drei/webgpu/index.mjs".
+node_modules/@react-three/drei/webgpu/index.mjs (11499:27): "ShaderChunk" is not exported by "node_modules/three/build/three.webgpu.js", imported by "node_modules/@react-three/drei/webgpu/index.mjs".
+node_modules/@react-three/drei/webgpu/index.mjs (11500:10): "ShaderChunk" is not exported by "node_modules/three/build/three.webgpu.js", imported by "node_modules/@react-three/drei/webgpu/index.mjs".
+node_modules/@react-three/drei/webgpu/index.mjs (11500:54): "ShaderChunk" is not exported by "node_modules/three/build/three.webgpu.js", imported by "node_modules/@react-three/drei/webgpu/index.mjs".
+node_modules/@react-three/drei/webgpu/index.mjs (11506:12): "ShaderChunk" is not exported by "node_modules/three/build/three.webgpu.js", imported by "node_modules/@react-three/drei/webgpu/index.mjs".
+```
+
+At the moment they must imported from `@react-three/drei/core` or `@react-three/drei` instead.

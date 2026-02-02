@@ -1,6 +1,6 @@
 'use client'
 
-import { Canvas, useUniforms, useNodes, useLocalNodes, useFrame, usePostProcessing } from '@react-three/fiber/webgpu'
+import { Canvas, useUniforms, useNodes, useLocalNodes, useFrame, useRenderPipeline } from '@react-three/fiber/webgpu'
 import { OrbitControls } from '@react-three/drei/core'
 import { Fn, vec3, sin, time, positionLocal, normalLocal } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
@@ -47,9 +47,9 @@ const UI = () => {
 }
 
 const PostProcessing = () => {
-  usePostProcessing(({ postProcessing, passes }) => {
+  useRenderPipeline(({ renderPipeline, passes }) => {
     const sceneTexture = passes.scenePass.getTextureNode()
-    postProcessing.outputNode = sceneTexture.add(bloom(sceneTexture, 0.5, 0.1, 0.9))
+    renderPipeline.outputNode = sceneTexture.add(bloom(sceneTexture, 0.5, 0.1, 0.9))
   })
 
   return null
