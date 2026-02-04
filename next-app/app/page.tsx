@@ -1,7 +1,7 @@
 'use client'
 
 import { Canvas, useUniforms, useNodes, useLocalNodes, useFrame, useRenderPipeline } from '@react-three/fiber/webgpu'
-import { OrbitControls } from '@react-three/drei/core'
+import { OrbitControls } from '@react-three/drei/webgpu'
 import { Fn, vec3, sin, time, positionLocal, normalLocal } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
 import { useRef } from 'react'
