@@ -30,6 +30,10 @@ Ok in dev and prod.
 
 Ok in dev and prod.
 
+## <Html> not showing up until window is resized
+
+Open an example, then resize the window.
+
 ### HMR Warning
 
 Getting this (likely unrelated) warning:

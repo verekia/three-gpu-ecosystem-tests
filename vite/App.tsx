@@ -1,5 +1,5 @@
 import { Canvas, useUniforms, useNodes, useLocalNodes, useFrame, useRenderPipeline } from '@react-three/fiber/webgpu'
-import { OrbitControls } from '@react-three/drei/webgpu'
+import { OrbitControls, Html } from '@react-three/drei/webgpu'
 import { Fn, vec3, sin, time, positionLocal, normalLocal } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
 import { useRef } from 'react'
@@ -59,6 +59,9 @@ const IndexPage = () => (
       <OrbitControls />
       <GlobalEffects />
       <WobblySphere />
+      <Html center>
+        <div style={{ color: 'black' }}>Hello World</div>
+      </Html>
       <ambientLight intensity={3} />
       <directionalLight position={[5, 5, 3]} intensity={3} />
       <PostProcessing />
